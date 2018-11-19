@@ -1,0 +1,70 @@
+{
+  "name": "rexact",
+  "version": "0.0.1",
+  "description": "Vuex based state management library for react",
+  "author": "Juan Carlos Lloret Hernández",
+  "license": "MIT",
+  "main": "./lib/index.js",
+  "unpkg": "dist/rexact.js",
+  "module": "es/index.js",
+  "files": [
+    "dist",
+    "lib",
+    "src",
+    "es"
+  ],
+  "scripts": {
+    "build:commonjs": "cross-env BABEL_ENV=commonjs babel src --out-dir lib",
+    "build:es": "babel src --out-dir es",
+    "build:umd": "cross-env NODE_ENV=development rollup -c -o dist/rexact.js",
+    "build:umd:min": "cross-env NODE_ENV=production rollup -c -o dist/rexact.min.js",
+    "build": "npm run build:commonjs && npm run build:es && npm run build:umd && npm run build:umd:min",
+    "clean": "rimraf lib dist es coverage",
+    "format": "prettier --write '{src,test}/**/*.js'",
+    "lint": "eslint src test/utils test/components",
+    "prepare": "npm run clean && npm run build",
+    "pretest": "npm run lint",
+    "test": "node ./test/run-tests.js",
+    "coverage": "codecov"
+  },
+  "peerDependencies": {
+    "react": "^16.4.0-0"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.1.5",
+    "@babel/core": "^7.1.6",
+    "@babel/plugin-proposal-object-rest-spread": "^7.0.0",
+    "@babel/plugin-transform-modules-commonjs": "^7.1.0",
+    "@babel/plugin-transform-react-jsx": "^7.1.6",
+    "@babel/plugin-transform-runtime": "^7.1.0",
+    "@babel/preset-env": "^7.1.6",
+    "cross-env": "^5.2.0",
+    "cross-spawn": "^6.0.5",
+    "eslint": "^5.9.0",
+    "eslint-config-prettier": "^3.3.0",
+    "eslint-plugin-import": "^2.14.0",
+    "eslint-plugin-prettier": "^3.0.0",
+    "eslint-plugin-react": "^7.11.1",
+    "jest": "^23.6.0",
+    "jest-dom": "^2.1.1",
+    "prettier": "^1.15.2",
+    "react": "^16.6.3",
+    "react-dom": "^16.6.3",
+    "react-testing-library": "^5.2.3",
+    "rimraf": "^2.6.2",
+    "rollup": "^0.67.3",
+    "rollup-plugin-babel": "^4.0.3",
+    "rollup-plugin-commonjs": "^9.2.0",
+    "rollup-plugin-node-resolve": "^3.4.0",
+    "rollup-plugin-replace": "^2.1.0",
+    "rollup-plugin-uglify": "^6.0.0"
+  },
+  "dependencies": {
+    "prop-types": "^15.6.2"
+  },
+  "browserify": {
+    "transform": [
+      "loose-envify"
+    ]
+  }
+}
