@@ -38,6 +38,8 @@
     "@babel/plugin-transform-react-jsx": "^7.1.6",
     "@babel/plugin-transform-runtime": "^7.1.0",
     "@babel/preset-env": "^7.1.6",
+    "babel-core": "^6.26.3",
+    "babel-eslint": "^10.0.1",
     "cross-env": "^5.2.0",
     "cross-spawn": "^6.0.5",
     "eslint": "^5.9.0",
@@ -60,6 +62,7 @@
     "rollup-plugin-uglify": "^6.0.0"
   },
   "dependencies": {
+    "@babel/runtime": "^7.1.5",
     "prop-types": "^15.6.2"
   },
   "browserify": {

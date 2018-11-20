@@ -1,3 +1,4 @@
-import Provider from "./components/Provider";
+import { Store } from './components/Store'
+import { withStore } from './components/withStore'
 
-export { Provider };
+export { Store, withStore }
