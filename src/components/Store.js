@@ -8,7 +8,6 @@ export const AppContext = React.createContext({})
 export class Store extends Component {
   constructor(props) {
     super(props)
-    console.log(props)
     this.state = {
       state: props.config.state,
       commit: mutation => this.commit(mutation),
