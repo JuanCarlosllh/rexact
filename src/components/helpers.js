@@ -1,15 +1,9 @@
-export const makeLocalGetters = (getters = {}, namespace = []) => {
-  const gettersProxy = {}
-
-  const splitPos = namespace.length
+export const makeLocalGetters = (getters = {}, parent) => {
+  var gettersProxy = {}
   Object.keys(getters).forEach(type => {
-    if (type.slice(0, splitPos) !== namespace) return
-    const localType = type.slice(splitPos)
-    Object.defineProperty(gettersProxy, localType, {
-      get: () => getters[type],
-      enumerable: true
+    Object.defineProperty(gettersProxy, type, {
+      get: () => getters[type](parent.state.state, parent.state.getters)
     })
   })
-
   return gettersProxy
 }
