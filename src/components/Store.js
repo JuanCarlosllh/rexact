@@ -17,7 +17,8 @@ export class Store extends Component {
           this.commitWithObject(mutation.type, payload)
         }
       },
-      getters: makeLocalGetters(props.config.getters, this) // not sure about this...
+      getters: makeLocalGetters(props.config.getters, this), // not sure about this...
+      dispatch: action => this.action(action)
     }
   }
 
@@ -40,6 +41,13 @@ export class Store extends Component {
     this.update(this.state.state)
   }
 
+  action(name) {
+    this.props.config.actions[name]({
+      state: this.state.state,
+      commit: this.state.commit
+    })
+  }
+
   render() {
     return (
       <AppContext.Provider value={this.state}>
@@ -54,6 +62,7 @@ Store.propTypes = {
   config: PropTypes.shape({
     state: PropTypes.object,
     mutations: PropTypes.object,
-    getters: PropTypes.object
+    getters: PropTypes.object,
+    actions: PropTypes.object
   })
 }
