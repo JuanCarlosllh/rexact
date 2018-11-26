@@ -45,8 +45,6 @@
     "babel-preset-react": "^6.24.1",
     "cross-env": "^5.2.0",
     "cross-spawn": "^6.0.5",
-    "enzyme": "^3.7.0",
-    "enzyme-adapter-react-16": "^1.7.0",
     "eslint": "^5.9.0",
     "eslint-config-prettier": "^3.3.0",
     "eslint-plugin-import": "^2.14.0",
@@ -54,8 +52,6 @@
     "eslint-plugin-react": "^7.11.1",
     "jest": "^23.6.0",
     "jest-dom": "^2.1.1",
-    "jest-environment-enzyme": "^7.0.1",
-    "jest-enzyme": "^7.0.1",
     "npm-run": "^5.0.1",
     "prettier": "^1.15.2",
     "react": "^16.6.3",
@@ -79,9 +75,5 @@
     "transform": [
       "loose-envify"
     ]
-  },
-  "jest": {
-    "setupTestFrameworkScriptFile": "jest-enzyme",
-    "testEnvironment": "enzyme"
   }
 }
