@@ -1,6 +1,6 @@
 # What is Rexact
 
-Rexact is a lightweight **state management library** for React applications based on [Vuex](https://vuex.vuejs.org/) pattern.
+Rexact is a [lightweight](https://bundlephobia.com/result?p=rexact) **state management library** for React applications based on [Vuex](https://vuex.vuejs.org/) pattern.
 
 # Installation
 
