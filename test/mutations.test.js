@@ -83,3 +83,34 @@ test('Check mutations with arguments', () => {
   fireEvent.click(getByTestId('setCounterToSum'))
   expect(getByTestId('counter').textContent).toBe('30')
 })
+
+test('Check mutations with Object-Style Commit', () => {
+  const TestComponent = withStore(({ store }) => (
+    <div>
+      <p data-testid="counter">{store.state.count}</p>
+      <button
+        data-testid="setCounterToSum"
+        onClick={() =>
+          store.commit({ type: 'setCounterToSum', n1: 10, n2: 20 })
+        }
+      />
+    </div>
+  ))
+  const { getByTestId } = render(
+    <Store
+      config={{
+        state: { count: 0 },
+        mutations: {
+          setCounterToSum(state, { n1, n2 }) {
+            state.count = n1 + n2
+          }
+        }
+      }}
+    >
+      <TestComponent />
+    </Store>
+  )
+  expect(getByTestId('counter').textContent).toBe('0')
+  fireEvent.click(getByTestId('setCounterToSum'))
+  expect(getByTestId('counter').textContent).toBe('30')
+})
