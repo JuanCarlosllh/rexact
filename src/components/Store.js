@@ -10,7 +10,7 @@ export class Store extends Component {
     super(props)
     this.state = {
       state: props.config.state,
-      commit: mutation => this.commit(mutation),
+      commit: (mutation, ...args) => this.commit(mutation, ...args),
       getters: makeLocalGetters(props.config.getters, this) // not sure about this...
     }
   }
@@ -24,8 +24,8 @@ export class Store extends Component {
     }))
   }
 
-  commit(mutation) {
-    this.props.config.mutations[mutation](this.state.state)
+  commit(mutation, ...args) {
+    this.props.config.mutations[mutation](this.state.state, ...args)
     this.update(this.state.state)
   }
 
