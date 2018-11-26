@@ -1,10 +1,14 @@
 import React from 'react'
-import { mount, shallow } from 'enzyme'
+import { render, cleanup, fireEvent } from 'react-testing-library'
+import 'jest-dom/extend-expect'
 
 import { Store, withStore } from '../src'
 
+afterEach(cleanup)
+
 const config = {
   state: {
+    name: 'chuck',
     count: 0
   },
   mutations: {
@@ -22,32 +26,56 @@ const config = {
   }
 }
 
-const counter = ({ store }) => (
+const TestContainer = ({ store }) => (
   <div>
-    <button onClick={() => store.commit('increment')}>+</button>
-    <p>
-      {store.state.count} / {store.getters.operation}
-    </p>
-    <button onClick={() => store.commit('decrement')}>-</button>
+    <button data-testid="increment" onClick={() => store.commit('increment')} />
+    <p data-testid="name">{store.state.name}</p>
+    <p data-testid="counter">{store.state.count}</p>
+    <p data-testid="expo">{store.getters.expo}</p>
+    <button data-testid="decrement" onClick={() => store.commit('decrement')} />
   </div>
 )
-export const Counter = withStore(counter)
+const Counter = withStore(TestContainer)
 
-const StoreWrapper = mount(<Store config={config} />)
-const StoreTestWrapper = mount(
-  <Store config={config}>
-    <Counter id="counter" />
-  </Store>
-)
-
-it('Store has state, commit and getters', () => {
-  expect(StoreWrapper).toHaveState('state', { count: 0 })
-  expect(StoreWrapper).toHaveState('commit')
-  expect(StoreWrapper).toHaveState('getters')
+test('Check store state', () => {
+  const { getByTestId } = render(
+    <Store config={config}>
+      <Counter />
+    </Store>
+  )
+  expect(getByTestId('name').textContent).toBe(config.state.name)
+  expect(getByTestId('counter').textContent).toBe('0')
 })
 
-it('withStore components has store', () => {
-  const nCounter = StoreTestWrapper.find(counter)
-  expect(nCounter).toHaveProp('store')
-  expect(nCounter.props().store.state.count).toBe(0)
+test('Check store mutations', () => {
+  const { getByTestId } = render(
+    <Store config={config}>
+      <Counter />
+    </Store>
+  )
+  expect(getByTestId('counter').textContent).toBe('0')
+  fireEvent.click(getByTestId('increment'))
+  fireEvent.click(getByTestId('increment'))
+  fireEvent.click(getByTestId('increment'))
+  expect(getByTestId('counter').textContent).toBe('3')
+  fireEvent.click(getByTestId('decrement'))
+  expect(getByTestId('counter').textContent).toBe('2')
+})
+
+test('Check store getters', () => {
+  const { getByTestId } = render(
+    <Store
+      config={{
+        ...config,
+        state: {
+          ...config.state,
+          count: 4
+        }
+      }}
+    >
+      <Counter />
+    </Store>
+  )
+  expect(getByTestId('counter').textContent).toBe('4')
+  expect(getByTestId('expo').textContent).toBe('16')
 })
