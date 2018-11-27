@@ -79,7 +79,7 @@ const App = () => (
 )
 ```
 
-Now you can use the _withStore_ hight order component to acces the store
+Now you can use the _withStore_ high order component to acces the store
 
 ```javascript
 // Counter.js
@@ -103,7 +103,7 @@ export const Counter = withStore(counter)
 
 Rexact uses a **Single state tree** - that is, this single object contains all your application level state and serves as the "single source of truth".
 
-Lets create a very siple store with a counter state:
+Let's create a very siple store with a counter state:
 
 ```javascript
 const config = {
