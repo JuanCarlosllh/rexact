@@ -1,3 +1,7 @@
+[![Build Status](https://travis-ci.org/JuanCarlosllh/rexact.svg?branch=master)](https://travis-ci.org/JuanCarlosllh/rexact)
+
+**This library is under development and is not ready to be used in production**.
+
 # What is Rexact
 
 Rexact is a [lightweight](https://bundlephobia.com/result?p=rexact) **state management library** for React applications based on [Vuex](https://vuex.vuejs.org/) pattern.
@@ -6,6 +10,7 @@ Rexact is a [lightweight](https://bundlephobia.com/result?p=rexact) **state mana
 
 - [What is Rexact](#what-is-rexact)
 - [Table of contents](#table-of-contents)
+- [Status Progress](#status-progress)
 - [Installation](#installation)
   - [NPM](#npm)
   - [Yarn](#yarn)
@@ -21,7 +26,29 @@ Rexact is a [lightweight](https://bundlephobia.com/result?p=rexact) **state mana
     - [Dispatching Actions](#dispatching-actions)
 - [Inspiration](#inspiration)
 - [License](#license)
+
   <!--te-->
+
+# Status Progress
+
+- [ ] Store
+  - [x] State
+  - [x] Getters
+  - [x] Mutations
+  - [x] Actions
+  - [ ] Modules
+- [ ] Helpers
+  - [ ] mapState
+  - [ ] mapGetters
+  - [ ] mapMutations
+  - [ ] mapActions
+- [ ] Plugins
+  - [ ] Plugin Support
+  - [ ] Logger Plugin
+  - [ ] Redux Devtools plugin
+- [ ] Stric mode
+- [ ] Hot reloading mutations
+- [ ] Docs
 
 # Installation
 
