@@ -1,4 +1,5 @@
 [![Build Status](https://travis-ci.org/JuanCarlosllh/rexact.svg?branch=master)](https://travis-ci.org/JuanCarlosllh/rexact)
+[![npm](https://img.shields.io/npm/v/rexact.svg)](https://www.npmjs.org/package/rexact)
 
 **This library is under development and is not ready to be used in production**.
 
