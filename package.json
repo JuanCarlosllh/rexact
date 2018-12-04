@@ -1,6 +1,6 @@
 {
   "name": "rexact",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Vuex based state management library for react",
   "author": "Juan Carlos Lloret Hernández",
   "repository": {
