@@ -2,6 +2,8 @@
 
 **This library is under development and is not ready to be used in production**.
 
+Rexact docs are for now a slightly modified copy of [Vuex official docs](https://vuex.vuejs.org/guide/) since rexact api basically reimplements Vuex for react (in the same way Vuex does with Vue).
+
 # What is Rexact
 
 Rexact is a [lightweight](https://bundlephobia.com/result?p=rexact) **state management library** for React applications based on [Vuex](https://vuex.vuejs.org/) pattern.
@@ -24,6 +26,7 @@ Rexact is a [lightweight](https://bundlephobia.com/result?p=rexact) **state mana
     - [Object-Style Commit](#object-style-commit)
   - [Actions](#actions)
     - [Dispatching Actions](#dispatching-actions)
+    - [Composing Actions](#composing-actions)
 - [Inspiration](#inspiration)
 - [License](#license)
 
@@ -298,6 +301,86 @@ Actions are triggered with the store.dispatch method:
 
 ```javascript
 store.dispatch('increment')
+```
+
+We can perform asynchronous operations inside an action:
+
+```javascript
+actions: {
+  incrementAsync ({ commit }) {
+    setTimeout(() => {
+      commit('increment')
+    }, 1000)
+  }
+}
+```
+
+Actions support the same payload format and object-style dispatch:
+
+```javascript
+// dispatch with a payload
+store.dispatch('incrementAsync', {
+  amount: 10
+})
+
+// dispatch with an object
+store.dispatch({
+  type: 'incrementAsync',
+  amount: 10
+})
+```
+
+### Composing Actions
+
+Actions are often asynchronous, so how do we know when an action is done? And more importantly, how can we compose multiple actions together to handle more complex async flows?
+
+The first thing to know is that store.dispatch can handle Promise returned by the triggered action handler and it also returns Promise:
+
+```javascript
+actions: {
+  actionA ({ commit }) {
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        commit('someMutation')
+        resolve()
+      }, 1000)
+    })
+  }
+}
+```
+
+Now you can do:
+
+```javascript
+store.dispatch('actionA').then(() => {
+  // ...
+})
+```
+
+And also in another action:
+
+```javascript
+actions: {
+  actionB ({ dispatch, commit }) {
+    return dispatch('actionA').then(() => {
+      commit('someOtherMutation')
+    })
+  }
+}
+```
+
+Finally, if we make use of async / await, we can compose our actions like this:
+
+```javascript
+actions: {
+  async actionA ({ commit }) {
+    commit('gotData', await getData())
+  },
+  async actionB ({ dispatch, commit }) {
+    await dispatch('actionA') // wait for `actionA` to finish
+    commit('gotOtherData', await getOtherData())
+  }
+}
 ```
 
 # Inspiration
