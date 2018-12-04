@@ -42,6 +42,10 @@ Rexact is a [lightweight](https://bundlephobia.com/result?p=rexact) **state mana
   - [ ] mapGetters
   - [ ] mapMutations
   - [ ] mapActions
+- [ ] React
+  - [x] witchStore Higher-Order component
+  - [ ] StoreProvider component with render props
+  - [ ] useStore Hook
 - [ ] Plugins
   - [ ] Plugin Support
   - [ ] Logger Plugin
