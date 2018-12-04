@@ -56,7 +56,7 @@ test('Check mutations with arguments', () => {
       />
       <button
         data-testid="setCounterToSum"
-        onClick={() => store.commit('setCounterToSum', 10, 20)}
+        onClick={() => store.commit('setCounterToSum', { n1: 10, n2: 20 })}
       />
     </div>
   ))
@@ -68,7 +68,7 @@ test('Check mutations with arguments', () => {
           setCounterTo(state, count) {
             state.count = count
           },
-          setCounterToSum(state, n1, n2) {
+          setCounterToSum(state, { n1, n2 }) {
             state.count = n1 + n2
           }
         }

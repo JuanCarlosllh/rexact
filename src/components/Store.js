@@ -10,8 +10,8 @@ export class Store extends Component {
     super(props)
     this.state = {
       state: props.config.state,
-      commit: (mutation, ...args) => {
-        if (typeof mutation === 'string') this.commit(mutation, ...args)
+      commit: (mutation, payload = {}) => {
+        if (typeof mutation === 'string') this.commit(mutation, payload)
         else if (typeof mutation === 'object') {
           const { type, ...payload } = mutation // eslint-disable-line no-unused-vars
           this.commitWithObject(mutation.type, payload)
@@ -31,8 +31,8 @@ export class Store extends Component {
     }))
   }
 
-  commit(mutation, ...args) {
-    this.props.config.mutations[mutation](this.state.state, ...args)
+  commit(mutation, payload) {
+    this.props.config.mutations[mutation](this.state.state, payload)
     this.update(this.state.state)
   }
 
