@@ -18,7 +18,13 @@ export class Store extends Component {
         }
       },
       getters: makeLocalGetters(props.config.getters, this), // not sure about this...
-      dispatch: action => this.action(action)
+      dispatch: (action, payload = {}) => {
+        if (typeof action === 'string') return this.action(action, payload)
+        else if (typeof action === 'object') {
+          const { type, ...payload } = action // eslint-disable-line no-unused-vars
+          return this.action(action.type, payload)
+        }
+      }
     }
   }
 
@@ -41,11 +47,15 @@ export class Store extends Component {
     this.update(this.state.state)
   }
 
-  action(name) {
-    this.props.config.actions[name]({
-      state: this.state.state,
-      commit: this.state.commit
-    })
+  action(name, payload) {
+    return this.props.config.actions[name](
+      {
+        state: this.state.state,
+        commit: this.state.commit,
+        dispatch: this.state.dispatch
+      },
+      payload
+    )
   }
 
   render() {
