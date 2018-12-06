@@ -19,10 +19,10 @@ export class Store extends Component {
       },
       getters: makeLocalGetters(props.config.getters, this), // not sure about this...
       dispatch: (action, payload = {}) => {
-        if (typeof action === 'string') return this.action(action, payload)
+        if (typeof action === 'string') return this.dispah(action, payload)
         else if (typeof action === 'object') {
           const { type, ...payload } = action // eslint-disable-line no-unused-vars
-          return this.action(action.type, payload)
+          return this.dispah(action.type, payload)
         }
       }
     }
@@ -42,7 +42,7 @@ export class Store extends Component {
     this.update(this.state.state)
   }
 
-  action(name, payload) {
+  dispah(name, payload) {
     return this.props.config.actions[name](
       {
         state: this.state.state,
