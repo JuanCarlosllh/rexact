@@ -14,7 +14,7 @@ export class Store extends Component {
         if (typeof mutation === 'string') this.commit(mutation, payload)
         else if (typeof mutation === 'object') {
           const { type, ...payload } = mutation // eslint-disable-line no-unused-vars
-          this.commitWithObject(mutation.type, payload)
+          this.commit(mutation.type, payload)
         }
       },
       getters: makeLocalGetters(props.config.getters, this), // not sure about this...
@@ -39,11 +39,6 @@ export class Store extends Component {
 
   commit(mutation, payload) {
     this.props.config.mutations[mutation](this.state.state, payload)
-    this.update(this.state.state)
-  }
-
-  commitWithObject(type, payload) {
-    this.props.config.mutations[type](this.state.state, payload)
     this.update(this.state.state)
   }
 
