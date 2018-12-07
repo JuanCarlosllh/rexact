@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 
-import { makeLocalGetters } from './helpers'
+import { makeLocalGetters, generateState } from './helpers'
 
 export const AppContext = React.createContext({})
 
@@ -9,7 +9,7 @@ export class Store extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      state: props.config.state,
+      state: generateState(props.config),
       commit: (mutation, payload = {}) => {
         if (typeof mutation === 'string') this.commit(mutation, payload)
         else if (typeof mutation === 'object') {
