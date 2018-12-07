@@ -1,7 +1,12 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 
-import { makeLocalGetters, generateState } from './helpers'
+import {
+  makeLocalGetters,
+  generate,
+  reduceStateByNamespace,
+  reduceByNamespace
+} from './helpers'
 
 export const AppContext = React.createContext({})
 
@@ -9,7 +14,8 @@ export class Store extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      state: generateState(props.config),
+      state: generate(props.config, 'state'),
+      mutations: generate(props.config, 'mutations'),
       commit: (mutation, payload = {}) => {
         if (typeof mutation === 'string') this.commit(mutation, payload)
         else if (typeof mutation === 'object') {
@@ -38,7 +44,9 @@ export class Store extends Component {
   }
 
   commit(mutation, payload) {
-    this.props.config.mutations[mutation](this.state.state, payload)
+    const state = reduceStateByNamespace(mutation, this.state.state)
+    const reducedMutation = reduceByNamespace(mutation, this.state.mutations)
+    reducedMutation(state, payload)
     this.update(this.state.state)
   }
 

@@ -1,8 +1,9 @@
-export const generateState = (m, stack = {}, rootStack = {}, deep = 0) => {
+export const generate = (m, k, stack = {}, rootStack = {}, deep = 0) => {
   if (m['modules']) {
     Object.keys(m['modules']).forEach(key => {
-      const { mStack, mRootStack } = generateState(
+      const { mStack, mRootStack } = generate(
         m['modules'][key],
+        k,
         stack[key],
         rootStack,
         deep + 1
@@ -11,10 +12,10 @@ export const generateState = (m, stack = {}, rootStack = {}, deep = 0) => {
       rootStack = mRootStack
     })
   }
-  if (m.state) {
-    Object.keys(m.state).forEach(key => {
-      if (m.namespaced && deep !== 0) stack[key] = m.state[key]
-      else rootStack[key] = m.state[key]
+  if (m[k]) {
+    Object.keys(m[k]).forEach(key => {
+      if (m.namespaced && deep !== 0) stack[key] = m[k][key]
+      else rootStack[key] = m[k][key]
     })
   }
   if (deep === 0) {
@@ -37,8 +38,17 @@ export const makeLocalGetters = (getters = {}, parent) => {
   return gettersProxy
 }
 
-export const getNamespace = (namespace, modules) => {
+export const reduceStateByNamespace = (namespace, obj) => {
   const tokens = namespace.split('/')
-  if (tokens.length === 0) return modules.root
-  else return tokens.reduce((acc, curr) => acc[curr], modules)
+  if (tokens.length === 1) return obj
+  else {
+    tokens.pop()
+    return tokens.reduce((acc, curr) => acc[curr], obj)
+  }
+}
+
+export const reduceByNamespace = (namespace, obj) => {
+  const tokens = namespace.split('/')
+  if (tokens.length === 0) return obj
+  else return tokens.reduce((acc, curr) => acc[curr], obj)
 }
