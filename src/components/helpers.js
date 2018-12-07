@@ -40,7 +40,7 @@ export const makeLocalGetters = (getters = {}, parent) => {
 
 export const reduceStateByNamespace = (namespace, obj) => {
   const tokens = namespace.split('/')
-  if (tokens.length === 1) return obj
+  if (tokens.length === 0) return obj
   else {
     tokens.pop()
     return tokens.reduce((acc, curr) => acc[curr], obj)
