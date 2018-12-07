@@ -114,3 +114,61 @@ test('Check mutations with Object-Style Commit', () => {
   fireEvent.click(getByTestId('setCounterToSum'))
   expect(getByTestId('counter').textContent).toBe('30')
 })
+
+test('Check mutations with modules', () => {
+  const TestComponent = withStore(({ store }) => {
+    return (
+      <div>
+        <p data-testid="name">{store.state.name}</p>
+        <p data-testid="globalCount">{store.state.globalCount}</p>
+        <p data-testid="count">{store.state.counter.count}</p>
+        <button
+          data-testid="increment"
+          onClick={() => store.commit('counter/increment')}
+        />
+        <button
+          data-testid="incrementGlobalCount"
+          onClick={() => store.commit('incrementGlobalCount')}
+        />
+      </div>
+    )
+  })
+  const { getByTestId } = render(
+    <Store
+      config={{
+        state: {
+          name: 'chuck',
+          globalCount: 0
+        },
+        mutations: {
+          incrementGlobalCount(state) {
+            state.globalCount++
+          }
+        },
+        modules: {
+          counter: {
+            namespaced: true,
+            state: {
+              count: 0
+            },
+            mutations: {
+              increment(state) {
+                state.count++
+              }
+            }
+          }
+        }
+      }}
+    >
+      <TestComponent />
+    </Store>
+  )
+
+  expect(getByTestId('name').textContent).toBe('chuck')
+  expect(getByTestId('count').textContent).toBe('0')
+  expect(getByTestId('globalCount').textContent).toBe('0')
+  fireEvent.click(getByTestId('increment'))
+  fireEvent.click(getByTestId('incrementGlobalCount'))
+  expect(getByTestId('count').textContent).toBe('1')
+  expect(getByTestId('globalCount').textContent).toBe('1')
+})
