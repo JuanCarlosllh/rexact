@@ -29,11 +29,15 @@ export const generate = (m, k, stack = {}, rootStack = {}, deep = 0) => {
 }
 
 export const makeLocalGetters = (getters = {}, parent) => {
-  var gettersProxy = {}
+  const gettersProxy = {}
   Object.keys(getters).forEach(type => {
-    Object.defineProperty(gettersProxy, type, {
-      get: () => getters[type](parent.state.state, parent.state.getters)
-    })
+    if (getters[type] instanceof Function) {
+      Object.defineProperty(gettersProxy, type, {
+        get: () => getters[type](parent.state.state, parent.state.getters)
+      })
+    } else {
+      gettersProxy[type] = makeLocalGetters(getters[type], parent)
+    }
   })
   return gettersProxy
 }

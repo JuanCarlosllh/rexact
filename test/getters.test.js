@@ -50,3 +50,37 @@ test('Check store getters calling getters', () => {
   )
   expect(getByTestId('duplicateExpo').textContent).toBe('32')
 })
+
+test('Check getters with modules', () => {
+  const TestComponent = withStore(({ store }) => (
+    <div>
+      <p data-testid="expo">{store.getters.expo}</p>
+      <p data-testid="sum">{store.getters.counter.sum}</p>
+      <p data-testid="expoAndSum">{store.getters.counter.expoAndSum}</p>
+    </div>
+  ))
+  const { getByTestId } = render(
+    <Store
+      config={{
+        state: { count: 4 },
+        getters: {
+          expo: state => state.count * state.count
+        },
+        modules: {
+          counter: {
+            namespaced: true,
+            getters: {
+              sum: state => state.count + state.count,
+              expoAndSum: (state, getters) => getters.expo + state.count
+            }
+          }
+        }
+      }}
+    >
+      <TestComponent />
+    </Store>
+  )
+  expect(getByTestId('expo').textContent).toBe('16')
+  expect(getByTestId('sum').textContent).toBe('8')
+  expect(getByTestId('expoAndSum').textContent).toBe('20')
+})

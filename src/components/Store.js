@@ -12,10 +12,13 @@ export const AppContext = React.createContext({})
 
 export class Store extends Component {
   constructor(props) {
+    const modularState = generate(props.config, 'state')
+    const modularMutations = generate(props.config, 'mutations')
+    const modularGetters = generate(props.config, 'getters')
     super(props)
     this.state = {
-      state: generate(props.config, 'state'),
-      mutations: generate(props.config, 'mutations'),
+      state: modularState,
+      mutations: modularMutations,
       commit: (mutation, payload = {}) => {
         if (typeof mutation === 'string') this.commit(mutation, payload)
         else if (typeof mutation === 'object') {
@@ -23,7 +26,7 @@ export class Store extends Component {
           this.commit(mutation.type, payload)
         }
       },
-      getters: makeLocalGetters(props.config.getters, this), // not sure about this...
+      getters: makeLocalGetters(modularGetters, this), // not sure about this...
       dispatch: (action, payload = {}) => {
         if (typeof action === 'string') return this.dispah(action, payload)
         else if (typeof action === 'object') {
