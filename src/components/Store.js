@@ -4,6 +4,7 @@ import PropTypes from 'prop-types'
 import {
   makeLocalGetters,
   generate,
+  getNamespace,
   reduceStateByNamespace,
   reduceByNamespace
 } from './helpers'
@@ -15,10 +16,12 @@ export class Store extends Component {
     const modularState = generate(props.config, 'state')
     const modularMutations = generate(props.config, 'mutations')
     const modularGetters = generate(props.config, 'getters')
+    const modularActions = generate(props.config, 'actions')
     super(props)
     this.state = {
       state: modularState,
       mutations: modularMutations,
+      actions: modularActions,
       commit: (mutation, payload = {}) => {
         if (typeof mutation === 'string') this.commit(mutation, payload)
         else if (typeof mutation === 'object') {
@@ -53,12 +56,22 @@ export class Store extends Component {
     this.update(this.state.state)
   }
 
-  dispah(name, payload) {
-    return this.props.config.actions[name](
+  dispah(action, payload) {
+    const state = reduceStateByNamespace(action, this.state.state)
+    const reducedAction = reduceByNamespace(action, this.state.actions)
+    const namespace = getNamespace(action)
+    return reducedAction(
       {
-        state: this.state.state,
-        commit: this.state.commit,
-        dispatch: this.state.dispatch
+        state: state,
+        commit: (localMoutation, localPayload) =>
+          namespace
+            ? this.state.commit(`${namespace}/${localMoutation}`, localPayload)
+            : this.state.commit(localMoutation, localPayload),
+        dispatch: (localAction, localPayload) =>
+          namespace
+            ? this.state.dispatch(`${namespace}/${localAction}`, localPayload)
+            : this.state.dispatch(localAction, localPayload),
+        rootState: this.state.state
       },
       payload
     )

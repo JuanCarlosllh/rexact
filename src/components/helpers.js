@@ -42,13 +42,18 @@ export const makeLocalGetters = (getters = {}, parent) => {
   return gettersProxy
 }
 
-export const reduceStateByNamespace = (namespace, obj) => {
+export const getNamespace = namespace => {
   const tokens = namespace.split('/')
-  if (tokens.length === 0) return obj
+  if (tokens.length <= 1) return null
   else {
     tokens.pop()
-    return tokens.reduce((acc, curr) => acc[curr], obj)
+    return tokens
   }
+}
+export const reduceStateByNamespace = (path, obj) => {
+  const namespace = getNamespace(path)
+  if (!namespace) return obj
+  return namespace.reduce((acc, curr) => acc[curr], obj)
 }
 
 export const reduceByNamespace = (namespace, obj) => {
