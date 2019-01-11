@@ -28,15 +28,21 @@ export const generate = (m, k, stack = {}, rootStack = {}, deep = 0) => {
   }
 }
 
-export const makeLocalGetters = (getters = {}, parent) => {
+export const makeLocalGetters = (getters = {}, parent, namespace = null) => {
   const gettersProxy = {}
   Object.keys(getters).forEach(type => {
     if (getters[type] instanceof Function) {
       Object.defineProperty(gettersProxy, type, {
-        get: () => getters[type](parent.state.state, parent.state.getters)
+        get: () => {
+          const state = namespace
+            ? reduceStateByNamespace(`${namespace}/${type}`, parent.state.state)
+            : parent.state.state
+          return getters[type](state, parent.state.getters, parent.state.state)
+        }
       })
     } else {
-      gettersProxy[type] = makeLocalGetters(getters[type], parent)
+      namespace = namespace ? `${namespace}/${type}` : type
+      gettersProxy[type] = makeLocalGetters(getters[type], parent, namespace)
     }
   })
   return gettersProxy
