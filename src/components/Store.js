@@ -6,7 +6,7 @@ import {
   generate,
   getNamespace,
   reduceStateByNamespace,
-  reduceByNamespace
+  reduceElementByNamespace
 } from './helpers'
 
 export const AppContext = React.createContext({})
@@ -51,18 +51,28 @@ export class Store extends Component {
 
   commit(mutation, payload) {
     const state = reduceStateByNamespace(mutation, this.state.state)
-    const reducedMutation = reduceByNamespace(mutation, this.state.mutations)
+    const reducedMutation = reduceElementByNamespace(
+      mutation,
+      this.state.mutations
+    )
     reducedMutation(state, payload)
     this.update(this.state.state)
   }
 
   dispah(action, payload) {
-    const state = reduceStateByNamespace(action, this.state.state)
-    const reducedAction = reduceByNamespace(action, this.state.actions)
     const namespace = getNamespace(action)
+    const state = reduceStateByNamespace(action, this.state.state)
+    const getters = reduceElementByNamespace(
+      namespace ? namespace.join('/') : null,
+      this.state.getters
+    )
+    const reducedAction = reduceElementByNamespace(action, this.state.actions)
     return reducedAction(
       {
-        state: state,
+        state,
+        getters,
+        rootState: this.state.state,
+        rootGetters: this.state.getters,
         commit: (localMoutation, localPayload) =>
           namespace
             ? this.state.commit(`${namespace}/${localMoutation}`, localPayload)
@@ -70,8 +80,7 @@ export class Store extends Component {
         dispatch: (localAction, localPayload) =>
           namespace
             ? this.state.dispatch(`${namespace}/${localAction}`, localPayload)
-            : this.state.dispatch(localAction, localPayload),
-        rootState: this.state.state
+            : this.state.dispatch(localAction, localPayload)
       },
       payload
     )

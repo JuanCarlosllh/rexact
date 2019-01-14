@@ -38,7 +38,7 @@ export const makeLocalGetters = (getters = {}, parent, namespace = null) => {
             ? reduceStateByNamespace(`${namespace}/${type}`, parent.state.state)
             : parent.state.state
           const localGetters = namespace
-            ? reduceByNamespace(namespace, parent.state.getters)
+            ? reduceElementByNamespace(namespace, parent.state.getters)
             : parent.state.getters
           return getters[type](
             localState,
@@ -67,14 +67,14 @@ export const getNamespace = namespace => {
     return tokens
   }
 }
+export const getNamespacePath = namespace => namespace.join('/')
 export const reduceStateByNamespace = (path, obj) => {
   const namespace = getNamespace(path)
   if (!namespace) return obj
   return namespace.reduce((acc, curr) => acc[curr], obj)
 }
-
-export const reduceByNamespace = (namespace, obj) => {
-  const tokens = namespace.split('/')
+export const reduceElementByNamespace = (namespace, obj) => {
+  const tokens = namespace ? namespace.split('/') : []
   if (tokens.length === 0) return obj
   else return tokens.reduce((acc, curr) => acc[curr], obj)
 }

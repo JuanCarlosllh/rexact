@@ -251,3 +251,71 @@ test('Check actions with modules', () => {
   expect(getByTestId('localCounter').textContent).toBe('10')
   expect(getByTestId('localName').textContent).toBe('Norris')
 })
+
+test('Check getters inside actions', () => {
+  const TestComponent = withStore(({ store }) => (
+    <div>
+      <p data-testid="counter">{store.state.count}</p>
+      <p data-testid="localCounter">{store.state.counter.localCount}</p>
+      <button
+        data-testid="setCounter"
+        onClick={() => store.dispatch('setCounter')}
+      />
+      <button
+        data-testid="setLocalCounter"
+        onClick={() => store.dispatch('counter/setLocalCounter')}
+      />
+    </div>
+  ))
+  const { getByTestId } = render(
+    <Store
+      config={{
+        state: {
+          count: 6
+        },
+        mutations: {
+          SetCount(state, n) {
+            state.count = n
+          }
+        },
+        actions: {
+          setCounter({ commit, getters }) {
+            commit('SetCount', getters.expo)
+          }
+        },
+        getters: {
+          expo: state => state.count * state.count
+        },
+        modules: {
+          counter: {
+            namespaced: true,
+            state: {
+              localCount: 0,
+              val: 3
+            },
+            mutations: {
+              SetLocalCount(state, n) {
+                state.localCount = n
+              }
+            },
+            actions: {
+              setLocalCounter({ commit, getters, rootGetters }) {
+                commit('SetLocalCount', rootGetters.expo + getters.localExpo)
+              }
+            },
+            getters: {
+              localExpo: state => state.localCount * state.localCount
+            }
+          }
+        }
+      }}
+    >
+      <TestComponent />
+    </Store>
+  )
+  expect(getByTestId('counter').textContent).toBe('6')
+  fireEvent.click(getByTestId('setCounter'))
+  expect(getByTestId('counter').textContent).toBe('36')
+  expect(getByTestId('localCounter').textContent).toBe('0')
+  fireEvent.click(getByTestId('setLocalCounter'))
+})
