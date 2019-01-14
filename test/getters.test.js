@@ -67,6 +67,9 @@ test('Check getters with modules', () => {
       <p data-testid="sumAllCounters">
         {store.getters.counter.subCounter.sumAllCounters}
       </p>
+      <p data-testid="sumAllGetters">
+        {store.getters.counter.subCounter.sumAllGetters}
+      </p>
     </div>
   ))
   const { getByTestId } = render(
@@ -84,8 +87,8 @@ test('Check getters with modules', () => {
             },
             getters: {
               sum: (state, _, rootState) => rootState.count + rootState.count,
-              expoAndSum: (state, getters, rootState) =>
-                getters.expo + rootState.count,
+              expoAndSum: (state, getters, rootState, rootGetters) =>
+                rootGetters.expo + rootState.count,
               sumLocal: state => state.localCount + state.localCount
             },
             modules: {
@@ -99,7 +102,14 @@ test('Check getters with modules', () => {
                   sumAllCounters: (state, _, rootState) =>
                     state.subCounter +
                     rootState.count +
-                    rootState.counter.localCount
+                    rootState.counter.localCount,
+                  sumAllGetters: (state, getters, rootState, rootGetters) =>
+                    rootGetters.expo + // 16
+                    rootGetters.counter.sum + // 8
+                    rootGetters.counter.expoAndSum + //  20
+                    rootGetters.counter.sumLocal + // 6
+                    getters.sumSubcounter + // 100
+                    getters.sumAllCounters // 57
                 }
               }
             }
@@ -116,4 +126,5 @@ test('Check getters with modules', () => {
   expect(getByTestId('sumLocal').textContent).toBe('6')
   expect(getByTestId('subcounter').textContent).toBe('100')
   expect(getByTestId('sumAllCounters').textContent).toBe('57')
+  expect(getByTestId('sumAllGetters').textContent).toBe('207')
 })

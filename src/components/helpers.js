@@ -34,10 +34,18 @@ export const makeLocalGetters = (getters = {}, parent, namespace = null) => {
     if (getters[type] instanceof Function) {
       Object.defineProperty(gettersProxy, type, {
         get: () => {
-          const state = namespace
+          const localState = namespace
             ? reduceStateByNamespace(`${namespace}/${type}`, parent.state.state)
             : parent.state.state
-          return getters[type](state, parent.state.getters, parent.state.state)
+          const localGetters = namespace
+            ? reduceByNamespace(namespace, parent.state.getters)
+            : parent.state.getters
+          return getters[type](
+            localState,
+            localGetters,
+            parent.state.state, // RootState
+            parent.state.getters // RootGetters
+          )
         }
       })
     } else {
