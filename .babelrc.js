@@ -4,6 +4,8 @@ const loose = true
 
 module.exports = {
   presets: [['@babel/env', { loose, modules: false }]],
+  sourceMaps: 'inline',
+  retainLines: true,
   plugins: [
     ['@babel/proposal-object-rest-spread', { loose }],
     '@babel/transform-react-jsx',
